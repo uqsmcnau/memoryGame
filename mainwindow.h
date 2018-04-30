@@ -1,7 +1,10 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
+#include "gamecontroller.h"
+#include "timer.h"
 #include <QMainWindow>
+#include <QtMultimedia/QMediaPlayer>
 
 namespace Ui {
 class MainWindow;
@@ -36,6 +39,25 @@ public slots:
 
 private:
     Ui::MainWindow *ui;
+    QSharedPointer<QThread> thread;
+    QSharedPointer<GameController> worker;
+
+    QSharedPointer<QThread> redThread;
+    QSharedPointer<QThread> blueThread;
+    QSharedPointer<QThread> greenThread;
+    QSharedPointer<QThread> yellowThread;
+
+    QSharedPointer<Timer> redTimer;
+    QSharedPointer<Timer> blueTimer;
+    QSharedPointer<Timer> greenTimer;
+    QSharedPointer<Timer> yellowTimer;
+
+    QSharedPointer<QMediaPlayer> redPlayer;
+    QSharedPointer<QMediaPlayer> bluePlayer;
+    QSharedPointer<QMediaPlayer> greenPlayer;
+    QSharedPointer<QMediaPlayer> yellowPlayer;
+    QSharedPointer<QMediaPlayer> successPlayer;
+    QSharedPointer<QMediaPlayer> failurePlayer;
 
 private slots:
     void on_redButton_pressed();
@@ -56,55 +78,4 @@ signals:
 
 };
 
-class Worker : public QObject {
-    Q_OBJECT
-
-public:
-    Worker();
-    ~Worker();
-    void hear (char c, std::string s);
-    void play();
-
-public slots:
-    void start();
-
-    void hear_red();
-    void hear_blue();
-    void hear_green();
-    void hear_yellow();
-
-signals:
-    void signal_red();
-    void signal_blue();
-    void signal_green();
-    void signal_yellow();
-
-    void playSuccess();
-    void playFailure();
-
-    void finished();
-    void error(QString err);
-
-private:
-    std::string targetset;
-    std::string inputset;
-    bool playing;
-};
-
-class Timer : public QObject {
-    Q_OBJECT
-
-public:
-    Timer();
-    ~Timer();
-
-public slots:
-    void process();
-
-signals:
-    void done();
-    void finished();
-    void error(QString err);
-};
-
-#endif // MAINWINDOW_H
+#endif // CONTROLLER_H
